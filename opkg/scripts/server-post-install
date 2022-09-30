@@ -62,9 +62,9 @@ foreach ('contacts.cfg', 'localhost.cfg', 'printer.cfg', 'switch.cfg', 'windows.
     or (oscar_log(1, ERROR, "Failed to update plugin path in /etc/naemon/resource.cfg."), exit 1);
 
 # Now, enable the needed services.
-opkg_print("Enabling  httpd, naemon, thruk services on head-node\n");
-!enable_system_services(HTTP,NAEMON,THRUK)
-    or (oscar_log(1, ERROR, "Couldn't enable at least one of httpd, naemon, thruk services on head-node."), exit 1);
+opkg_print("Enabling  httpd, naemon services on head-node\n");
+!enable_system_services(HTTP,NAEMON)
+    or (oscar_log(1, ERROR, "Couldn't enable at least one of httpd, naemon services on head-node."), exit 1);
 
 # Now, do the real configuration.
 my $ref = OSCAR::Configurator_backend::readInConfigValues($configurator, "naemon", "", noarray=>1);
@@ -148,7 +148,7 @@ $errors += write_oscar_host_cfg('oscar-server', 'oscar-server', $oscar_server_ip
 $errors += write_oscar_host_cfg('localhost', 'localhost', "127.0.0.1"); # Required for local only testing like MySQL.
 
 # Now, set the admin password to web interface access.
-!oscar_system("htpasswd -b -p -d /etc/naemon/htpasswd admin '$ref->{admin_passwd}'")
+!oscar_system("htpasswd -b -p -d /etc/thruk/htpasswd thrukadmin '$ref->{admin_passwd}'")
     or (oscar_log(1, ERROR, "Failed to set passwd for naemon web interface."), exit 1);
 
 exit($errors);
